@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -21,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,7 +35,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.calculator.model.BasicCalculator
-import com.example.calculator.model.KeyPads
 
 /**
  * Defines a calculator button as Composable
@@ -91,9 +92,11 @@ fun CalcTextField(label: String,
 //}
 
 @Composable
-fun CalculatorScreen(context: Context, calc: BasicCalculator) {
+fun CalculatorScreen(context: Context, keysPadMap: MutableState<Map<Int, Array<String>>>, calc: BasicCalculator) {
   // (invisible) Outer box, representing the entire screen
-  Box(modifier = Modifier.fillMaxSize(), // Fill the parent size
+  Box(modifier =
+//    Modifier.fillMaxSize(),
+    Modifier.wrapContentSize(),
     contentAlignment = Alignment.Center // Align children to the center
   ) {
     Surface(  // Calculator surface
@@ -104,14 +107,17 @@ fun CalculatorScreen(context: Context, calc: BasicCalculator) {
           shape = RoundedCornerShape(Props.getValueAs<Int>(Prop.OuterBorderRoundedCorner)!!.dp)
         )
         .padding(Props.getValueAs<Int>(Prop.OuterBorderPadding)!!.dp)
-        .fillMaxWidth(Props.getValueAs(Prop.WidthRatio)!!)
-        .fillMaxHeight(Props.getValueAs(Prop.HeightRatio)!!)
+//        .fillMaxWidth(Props.getValueAs(Prop.WidthRatio)!!)
+//        .fillMaxHeight(Props.getValueAs(Prop.HeightRatio)!!)
+        .wrapContentSize()
       ,
       color = MaterialTheme.colorScheme.background,
     ) {
       // Column of rows
       Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier =
+          Modifier.fillMaxWidth(),
+//          Modifier.wrapContentSize(),
         verticalArrangement =
         Arrangement.spacedBy(
           Props.getValueAs<Int>(Prop.RowSpacing)!!.dp,
@@ -136,7 +142,7 @@ fun CalculatorScreen(context: Context, calc: BasicCalculator) {
           }
         }
         // Operators rows
-        KeyPads.forEach { (row, keyPads) ->
+        keysPadMap.value.forEach { (row, keyPads) ->
           Row( // a button row
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement =
