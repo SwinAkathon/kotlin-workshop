@@ -5,7 +5,7 @@ Kotlin Workshop
 
 1. [Calculator Basics](calculator)
 2. Calculator (Intermediate)
-2. Calculator (Advanced)
+3. Calculator (Advanced)
 
 # Kotlin Frontend with Large Data Stream Processing
 
