@@ -4,9 +4,10 @@ import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.mutableStateOf
+import androidx.activity.viewModels
 import androidx.compose.ui.platform.LocalContext
 import com.example.calculator.model.BasicCalculator
+import com.example.calculator.model.CalcModel
 import com.example.calculator.model.KeyPadsLandscape
 import com.example.calculator.model.KeyPadsPortrait
 import com.example.calculator.view.CalculatorScreen
@@ -16,7 +17,7 @@ class CalculatorAct : ComponentActivity() {
   // kep a MutableState of the keyPads to present, based on the Device orientation
   // which keyPads structure to use is defined in the calculator's model and is retrieved
   // at run time by the function onConfigurationChanged
-  private val keyPadsFlex = mutableStateOf<Map<Int, Array<String>>>(mapOf())
+  private lateinit var calcModel: CalcModel
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -29,24 +30,32 @@ class CalculatorAct : ComponentActivity() {
 
       CalculatorTheme {
         // initialise the calculator screen
-        keyPadsFlex.value = getKeyPadsConfiguration(resources.configuration)
-        // pass keyPadsFlex into screen so that it is recomposed when keyPadsFlex is updated
-        // at run time, when device rotates
-        CalculatorScreen(context, keyPadsFlex, calc)
+
+        // initialise the view model
+        calcModel = viewModels<CalcModel>().value
+        calcModel.initState(getKeyPadsConfiguration(resources.configuration),calc.resultStr)
+
+        // now the screen
+        CalculatorScreen(context, calc, calcModel)
       }
     }
   }
 
   /**
    * Invoked when device has rotated
+   * @requires property <tt>android:configChanges="orientation|screenSize"</tt> is added to this activity configuration
+   * in the AndroidManifest file
    */
   override fun onConfigurationChanged(newConfig: Configuration) {
     super.onConfigurationChanged(newConfig)
     // determines the keyPads map suitable for the orientation
     // update keyPadsFlex to cause Recomposition of the screen
-    keyPadsFlex.value = getKeyPadsConfiguration(newConfig)
+    calcModel.onConfigurationChanged(getKeyPadsConfiguration(newConfig))
   }
 
+  /**
+   * @effects return either KeyPadsPortrait or KeyPadsLandscape depending on the screen orientation
+   */
   private fun getKeyPadsConfiguration(deviceCfg: Configuration): Map<Int, Array<String>> {
     val orient = deviceCfg.orientation
     if (orient == Configuration.ORIENTATION_PORTRAIT) {

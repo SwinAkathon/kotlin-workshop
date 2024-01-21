@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
@@ -22,11 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,7 +27,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.calculator.model.BasicCalculator
+import com.example.calculator.model.CalcModel
 
 /**
  * Defines a calculator button as Composable
@@ -92,7 +87,7 @@ fun CalcTextField(label: String,
 //}
 
 @Composable
-fun CalculatorScreen(context: Context, keysPadMap: MutableState<Map<Int, Array<String>>>, calc: BasicCalculator) {
+fun CalculatorScreen(context: Context, calc: BasicCalculator, calcModel: CalcModel) {
   // (invisible) Outer box, representing the entire screen
   Box(modifier =
 //    Modifier.fillMaxSize(),
@@ -128,21 +123,20 @@ fun CalculatorScreen(context: Context, keysPadMap: MutableState<Map<Int, Array<S
         // Input row
         // shared calculator result (to be passed around between Calculator and
         // the Composables in CalculatorScreen
-        var calcResult by remember { mutableStateOf(calc.resultStr) }
         Row(modifier = Modifier.fillMaxWidth(),
           horizontalArrangement = Arrangement.Center)
         {
           CalcTextField("Enter input:",
             Modifier.fillMaxWidth(),
-            calcResult) { s ->
+            calcModel.result.value) { s ->
             run {
               calc.setInput(s)
-              calcResult = s
+              calcModel.result.value = s
             }
           }
         }
         // Operators rows
-        keysPadMap.value.forEach { (row, keyPads) ->
+        calcModel.keyPads.value.forEach { (row, keyPads) ->
           Row( // a button row
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement =
@@ -160,8 +154,8 @@ fun CalculatorScreen(context: Context, keysPadMap: MutableState<Map<Int, Array<S
               ) {
                 try {
                   calc.input(key)
-                  calcResult = calc.resultStr // TextFieldValue(calc.result)
-                } catch (e: Error) {
+                  calcModel.result.value = calc.resultStr
+                } catch (e: Error) {  // key not supported
                   displayMessage(context, e.message)
                 }
               }
