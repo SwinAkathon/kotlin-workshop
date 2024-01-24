@@ -56,6 +56,7 @@ dependencies {
   implementation("androidx.compose.ui:ui-graphics")
   implementation("androidx.compose.ui:ui-tooling-preview")
   implementation("androidx.compose.material3:material3")
+  implementation("androidx.paging:paging-common-android:3.3.0-alpha02")
   testImplementation("junit:junit:4.13.2")
   androidTestImplementation("androidx.test.ext:junit:1.1.5")
   androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -68,5 +69,9 @@ dependencies {
   implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:{latest-version}")
   // view model + Jetpack Compose
   implementation("androidx.lifecycle:lifecycle-viewmodel-compose:{latest-version}")
+  // Jetpack paging library
+  implementation("androidx.paging:paging-runtime-ktx:{latest-version}")
+  implementation("androidx.paging:paging-common-ktx:{latest-version}")
+  implementation("androidx.paging:paging-compose:{latest-version}")
 
 }
