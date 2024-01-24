@@ -65,7 +65,8 @@ dependencies {
   debugImplementation("androidx.compose.ui:ui-test-manifest")
 
   // View model
-  implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+  implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:{latest-version}")
   // view model + Jetpack Compose
-  implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+  implementation("androidx.lifecycle:lifecycle-viewmodel-compose:{latest-version}")
+
 }
