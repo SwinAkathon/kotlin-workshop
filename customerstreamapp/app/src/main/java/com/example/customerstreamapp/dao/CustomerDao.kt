@@ -6,10 +6,13 @@ import kotlinx.coroutines.flow.flow
 
 fun getCustomers(): Flow<List<Customer>> = flow {
   // simulate
-  val customers = listOf(Customer(1,"Alice"),
-    Customer(2, "Bob")
-    )
+  val names = arrayOf("Alice", "Bob", "John", "Jane", "Andrew")
+  val customers = List(50) {
+    Customer(it+1,names.random() + (it+1))
+  }
+
   emit(customers)
 
   // todo: handle pagination
 }
+
