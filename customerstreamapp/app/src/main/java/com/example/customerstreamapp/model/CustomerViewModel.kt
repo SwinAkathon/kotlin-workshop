@@ -9,12 +9,13 @@ import androidx.paging.cachedIn
 import com.example.customerstreamapp.dao.CustomerPagingSource
 
 class CustomerViewModel() : ViewModel() {
-  // val customers: Flow<List<Customer>> = getCustomers()
   // use Paging to obtain objects
+  val pageSize = 5
+  private val filePath = "customers.csv"
 
   lateinit var assetMan: AssetManager
 
-  val customerFlow = Pager(PagingConfig(pageSize = 20)) {
-    CustomerPagingSource(assetMan,"customers.csv")
+  val customerFlow = Pager(PagingConfig(pageSize = this.pageSize)) {
+    CustomerPagingSource(assetMan,filePath)
   }.flow.cachedIn(viewModelScope)
 }

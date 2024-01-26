@@ -2,6 +2,7 @@ package com.example.customerstreamapp.dao
 
 import android.content.Context
 import android.content.res.AssetManager
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.customerstreamapp.model.Customer
@@ -12,32 +13,52 @@ import java.io.FileReader
 /**
  * @requires filePath is a valid path (in the src/main/assets directory) to a CSV file containing Customer data
  */
-class CustomerPagingSource(private val assetMan: AssetManager, private val filePath: String) : PagingSource<Int, Customer>() {
+class CustomerPagingSource(private val assetMan: AssetManager, private val filePath: String) :
+  PagingSource<Int, Customer>() {
+  private lateinit var reader: BufferedReader
+
+  private val LTAG = CustomerPagingSource::class.simpleName
+
   override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Customer> {
     return try {
-      // Open the CSV file
-      val inputStream = assetMan.open(filePath)
-      val reader = inputStream.bufferedReader()
-      val customers = mutableListOf<Customer>()
+      val pageNumber = params.key ?: 0
+      val pageSize = params.loadSize
+      val readAheadLimit = 1024
 
-      // Skip the header row if necessary
-      reader.readLine()
-
-      // Read lines and parse
-      var line: String?
-      while (reader.readLine().also { line = it } != null) {
-        val tokens = line!!.split(",")
-        // Assuming CSV format: id,name
-        val customer = Customer(tokens[0].toInt(), tokens[1])
-        customers.add(customer)
+      Log.d(LTAG, "loading page ${pageNumber} (pageSize: ${pageSize})...")
+      // load objects for the current page
+      if (!::reader.isInitialized) {
+        // Open the CSV file
+        val inputStream = assetMan.open(filePath)
+        reader = inputStream.bufferedReader()
+        // Skip the header row
+        reader.readLine()
       }
 
-      reader.close()
+      // Read lines and parse
+      val customers = mutableListOf<Customer>()
+      var line: String?
+      var readCount = 0
+      while ((reader.readLine().also { line = it } != null) && readCount < pageSize) {
+        val tokens = line!!.split(",")
+        // record format: id,name
+        val customer = Customer(tokens[0].toInt(), tokens[1])
+        customers.add(customer)
+        readCount++
+      }
 
-      LoadResult.Page(
+      reader.mark(readAheadLimit)
+
+      // setup prev, next keys
+      val prevKey = if (pageNumber > 0) pageNumber - 1 else null
+      val nextKey = if (customers.isNotEmpty()) pageNumber + 1 else null
+
+      Log.d(LTAG, "...read count (${readCount}); previous: ${prevKey}; next: ${nextKey}...")
+
+      return LoadResult.Page(
         data = customers,
-        prevKey = null, // Only paging forward
-        nextKey = null // Assuming all data is loaded in one go
+        prevKey = prevKey,
+        nextKey = nextKey
       )
     } catch (e: Exception) {
       LoadResult.Error(e)

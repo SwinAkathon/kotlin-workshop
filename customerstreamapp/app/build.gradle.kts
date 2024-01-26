@@ -70,8 +70,12 @@ dependencies {
   // view model + Jetpack Compose
   implementation("androidx.lifecycle:lifecycle-viewmodel-compose:{latest-version}")
   // Jetpack paging library
-  implementation("androidx.paging:paging-runtime-ktx:{latest-version}")
-  implementation("androidx.paging:paging-common-ktx:{latest-version}")
-  implementation("androidx.paging:paging-compose:{latest-version}")
+  val paging_version = "3.2.1"
+  implementation("androidx.paging:paging-runtime-ktx:${paging_version}")
+  implementation("androidx.paging:paging-common-ktx:${paging_version}")
+  implementation("androidx.paging:paging-compose:${paging_version}")
+
+  // for ScrollBar adapter in Lazy colum
+//  implementation("androidx.compose.foundation:foundation:${paging_version}")
 
 }
