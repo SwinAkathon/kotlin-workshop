@@ -56,6 +56,10 @@ class CustomerPagingPushySource(private val inputStream: ObjectInputStream) :
     }
   }
 
+  private fun refresh() {
+    TODO("Not yet implemented")
+  }
+
   override fun getRefreshKey(state: PagingState<Int, Customer>): Int? {
     return null // Return null if data cannot be refreshed based on a position
   }
