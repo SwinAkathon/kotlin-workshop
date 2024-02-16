@@ -41,7 +41,7 @@ Github: https://github.com/SwinAkathon/kotlin-workshop
 5. ThemingCodeLab
 6. (Optional) AnimationCodeLab
 
-## Intermediate
+## Intermediate (Medium)
 
 ### Outline
 [Architecture and State](https://developer.android.com/courses/pathways/jetpack-compose-for-android-developers-3): Topics 2, 8
@@ -79,6 +79,7 @@ Github: https://github.com/SwinAkathon/kotlin-workshop
 ## Prerequisites
 1. [Advanced coroutines with Kotlin Flow and LiveData](https://developer.android.com/codelabs/advanced-kotlin-coroutines#0)
    2. Example: advanced-coroutines-codelab
+2. Branch `medium` or above with Jetpack compose
 
 ## References
 ### Pagination
@@ -156,7 +157,7 @@ class CustomerViewModel() : ViewModel() {
 Incrementally read data from a CSV file, one page at a time. Remember the location pointer to read
 next page (on user scrolling):
 
-`CustomerPagingSource`
+### `CustomerPagingSource`
 
 1. Sets up the `BufferredReader` ready to read
 ```
@@ -214,5 +215,5 @@ next page (on user scrolling):
 
 ## Handling a large object stream and displays them on a Composable with pagination
 
-## LazyColumn with ScrollBar
+## (Optional) LazyColumn with ScrollBar
 https://github.com/nanihadesuka/LazyColumnScrollbar

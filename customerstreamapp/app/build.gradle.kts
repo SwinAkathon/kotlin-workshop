@@ -56,7 +56,6 @@ dependencies {
   implementation("androidx.compose.ui:ui-graphics")
   implementation("androidx.compose.ui:ui-tooling-preview")
   implementation("androidx.compose.material3:material3")
-  implementation("androidx.paging:paging-common-android:3.3.0-alpha02")
   testImplementation("junit:junit:4.13.2")
   androidTestImplementation("androidx.test.ext:junit:1.1.5")
   androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -71,11 +70,19 @@ dependencies {
   implementation("androidx.lifecycle:lifecycle-viewmodel-compose:{latest-version}")
   // Jetpack paging library
   val paging_version = "3.2.1"
+  implementation("androidx.paging:paging-common-android:3.3.0-alpha02")
   implementation("androidx.paging:paging-runtime-ktx:${paging_version}")
   implementation("androidx.paging:paging-common-ktx:${paging_version}")
   implementation("androidx.paging:paging-compose:${paging_version}")
 
   // for ScrollBar adapter in Lazy colum
-//  implementation("androidx.compose.foundation:foundation:${paging_version}")
+  val foundation_version = "1.6.1"
+//  implementation("androidx.compose.foundation:foundation-android:${foundation_version}")
+//  implementation("androidx.compose.foundation:foundation-layout-desktop:${foundation_version}")
+//  implementation("androidx.compose.foundation:foundation-desktop:${foundation_version}")
+//  implementation("androidx.compose.foundation:foundation:${foundation_version}")
+//  implementation("androidx.compose.foundation:foundation-layout:${foundation_version}")
+//  implementation("androidx.compose.foundation:foundation-layout-android:${foundation_version}")
+
 
 }
