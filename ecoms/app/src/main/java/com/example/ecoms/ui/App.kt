@@ -15,19 +15,14 @@ import com.example.ecoms.ui.TopNav
 fun App() {
 
   val navController = rememberNavController()
-
   val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
   ModalNavigationDrawer(
     drawerState = drawerState,
-    drawerContent = {
-      DrawerMenu(navController, drawerState)
-    },
+    drawerContent = { DrawerMenu(navController, drawerState) },
   ) {
     Scaffold(
-      topBar = {
-        TopNav(navController, drawerState)
-      },
+      topBar = { TopNav(navController, drawerState) },
       content = { Navigation(navController, it) },
       bottomBar = { BottomNav(navController) }
     )

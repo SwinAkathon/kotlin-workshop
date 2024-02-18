@@ -2,6 +2,7 @@ package com.example.ecoms.ui
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.TopAppBar
@@ -23,15 +24,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.ecoms.AppConfig
-import com.example.ecoms.modules.dashboard.view.HomeScreen
+import com.example.ecoms.modules.dashboard.view.DashBoard
 import com.example.ecoms.modules.favourites.view.FavouritesScreen
+import com.example.ecoms.modules.product.view.ProductScreen
 import com.example.ecoms.modules.profile.view.ProfileScreen
 import com.example.ecoms.modules.search.view.SearchScreen
 import kotlinx.coroutines.CoroutineScope
@@ -41,19 +43,22 @@ import kotlinx.coroutines.launch
 fun Navigation(navController: NavHostController, paddingValues: PaddingValues) {
   NavHost(
     navController = navController,
-    startDestination = "home",
+    startDestination = "Home",
     modifier = Modifier.padding(paddingValues)
   ) {
-    composable("home") {
-      HomeScreen(navController)
+    composable("Home") {
+      DashBoard(navController)
     }
-    composable("search") {
+    composable("Products") {
+      ProductScreen(navController)
+    }
+    composable("Search") {
       SearchScreen(navController)
     }
-    composable("favourites") {
+    composable("Favourites") {
       FavouritesScreen(navController)
     }
-    composable("profile") {
+    composable("Profile") {
       ProfileScreen(navController)
     }
   }
@@ -65,14 +70,18 @@ fun TopNav(navController: NavHostController, drawerState: DrawerState) {
 
   TopAppBar(
     title = {
-      Text(text = AppConfig.props.appName)
+      Text(text = AppConfig.appName,
+        style = AppConfig.styleTitle,
+        color = AppConfig.colorTitle)
     },
-    backgroundColor = AppConfig.props.appColor,
+    backgroundColor = AppConfig.colorApp,
     navigationIcon = {
       IconButton(onClick = { togleDrawerMenu(drawerState, coroutineScope) }) {
         Icon(
           imageVector = Icons.Filled.Menu,
-          contentDescription = "Menu"
+          contentDescription = "Menu",
+          tint = AppConfig.colorDrawerMenu,
+          modifier = Modifier.size(100.dp)
         )
       }
     }
@@ -90,40 +99,49 @@ fun DrawerMenu(navController: NavController, drawerState: DrawerState) {
     selectedTextColor = Color.Black // Text color when selected
   )
 
-  ModalDrawerSheet(drawerContainerColor = AppConfig.props.appColor) {
-    Text(AppConfig.props.appName, modifier = androidx.compose.ui.Modifier.padding(16.dp))
+  val items = arrayOf("Products", "Search", "Favourites", "Profile")
+
+  ModalDrawerSheet(drawerContainerColor = AppConfig.colorApp) {
+    Text(AppConfig.appName, modifier = Modifier.padding(16.dp),
+      style = AppConfig.styleDrawerMenuTitle,
+      color = AppConfig.colorTitle)
     Divider()
-    NavigationDrawerItem(
-      label = { Text(text = "Search") },
-      selected = false,
-      shape = RectangleShape,
-      colors = itemColors,
-      onClick = {
-        navController.navigate("search")
-        togleDrawerMenu(drawerState, coroutineScope)
-      }
+    items.forEach { item ->
+      NavigationDrawerItem(
+        label = { Text(text = item) },
+        selected = false,
+//        shape = RectangleShape,
+        colors = itemColors,
+        onClick = {
+          navController.navigate(item)
+          togleDrawerMenu(drawerState, coroutineScope)
+        }
+      )
+    }
+  }
+}
+
+@Composable
+fun BottomNav(navController: NavController) {
+  val items = mapOf<String, ImageVector>(
+    "Home" to Icons.Default.Home,
+    "Search" to Icons.Default.Search,
+    "Favourites" to Icons.Default.Favorite,
+    "Profile" to Icons.Default.Person
     )
-    NavigationDrawerItem(
-      label = { Text(text = "Favourites") },
-      selected = false,
-      shape = RectangleShape,
-      colors = itemColors,
-      onClick = {
-        navController.navigate("favourites")
-        togleDrawerMenu(drawerState, coroutineScope)
-      }
-    )
-    NavigationDrawerItem(
-      label = { Text(text = "Profile") },
-      selected = false,
-      shape = RectangleShape,
-      colors = itemColors,
-      onClick = {
-        navController.navigate("profile")
-        togleDrawerMenu(drawerState, coroutineScope)
-      }
-    )
-    // ...other drawer items
+
+  BottomNavigation(
+    backgroundColor = AppConfig.colorApp
+  ) {
+    items.forEach { (item, image) ->
+      BottomNavigationItem(
+        selected = navController.currentDestination?.route == item,
+        onClick = { navController.navigate(item) },
+        icon = { Icon(image, contentDescription = item,
+          tint = AppConfig.colorBottomNav,
+          modifier = Modifier.size(40.dp)) },
+      )
+    }
   }
 }
 
@@ -132,38 +150,5 @@ fun togleDrawerMenu(drawerState: DrawerState, coroutineScope: CoroutineScope) {
     drawerState.apply {
       if (isClosed) open() else close()
     }
-  }
-}
-
-
-@Composable
-fun BottomNav(navController: NavController) {
-  BottomNavigation(
-    backgroundColor = AppConfig.props.appColor
-  ) {
-    BottomNavigationItem(
-      selected = navController.currentDestination?.route == "home",
-      onClick = { navController.navigate("home") },
-      icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
-//      label = { Text("Home") }
-    )
-    BottomNavigationItem(
-      selected = navController.currentDestination?.route == "search",
-      onClick = { navController.navigate("search") },
-      icon = { Icon(Icons.Default.Search, contentDescription = "Search") },
-//      label = { Text("Search") }
-    )
-    BottomNavigationItem(
-      selected = navController.currentDestination?.route == "favourites",
-      onClick = { navController.navigate("favourites") },
-      icon = { Icon(Icons.Default.Favorite, contentDescription = "Favourites") },
-//      label = { Text("Favourites") }
-    )
-    BottomNavigationItem(
-      selected = navController.currentDestination?.route == "profile",
-      onClick = { navController.navigate("profile") },
-      icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
-//      label = { Text("Profile") }
-    )
   }
 }

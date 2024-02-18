@@ -68,6 +68,7 @@ Github: https://github.com/SwinAkathon/kotlin-workshop
 #### Advanced state and side effects
 #### Navigation best practices
 #### Navigation
+- [Drawer menu](https://developer.android.com/jetpack/compose/components/drawer)
 
 ### Examples
 1. (Topic 5) AdvancedStateAndSideEffectsCodelab

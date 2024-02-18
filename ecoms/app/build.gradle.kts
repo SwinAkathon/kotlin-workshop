@@ -67,4 +67,15 @@ dependencies {
 
   // bottom navigation
   implementation("androidx.compose.material:material:1.6.1")
+
+  // View model
+  implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:{latest-version}")
+  // view model + Jetpack Compose
+  implementation("androidx.lifecycle:lifecycle-viewmodel-compose:{latest-version}")
+  // Jetpack paging library
+  val paging_version = "3.2.1"
+  implementation("androidx.paging:paging-common-android:3.3.0-alpha02")
+  implementation("androidx.paging:paging-runtime-ktx:${paging_version}")
+  implementation("androidx.paging:paging-common-ktx:${paging_version}")
+  implementation("androidx.paging:paging-compose:${paging_version}")
 }
