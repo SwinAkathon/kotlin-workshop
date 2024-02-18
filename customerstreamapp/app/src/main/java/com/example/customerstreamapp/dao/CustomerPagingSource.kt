@@ -37,9 +37,9 @@ class CustomerPagingSource(private val assetMan: AssetManager, private val fileP
 
       // Read lines and parse
       val customers = mutableListOf<Customer>()
-      var line: String?
+      var line: String? = null
       var readCount = 0
-      while ((reader.readLine().also { line = it } != null) && readCount < pageSize) {
+      while (readCount < pageSize && (reader.readLine().also { line = it } != null)) {
         val tokens = line!!.split(",")
         // record format: id,name
         val customer = Customer(tokens[0].toInt(), tokens[1])
