@@ -11,7 +11,7 @@ Application development with Kotlin
 🎓 **Level**: Beginner to Intermediate
 ![](images/workshop-splash.jpg)
 
-The purpose of this workshop is to teach how to develop Android apps in Kotlin that uses the latest features of the language. 
+The purpose of this workshop is to teach how to develop Android apps in Kotlin that uses the **modern features** of the language. 
 
 The original target audience of the workshop are students participating in [Akathon4AIoT](https://fb.me/e/3zDMO0U1l) at Swinburne Vietnam. More generally, however, the workshop would be suitable for anyone who:
 - has a basic knowledge in Kotlin and 
@@ -24,7 +24,7 @@ The workshop includes **two modules**:
 | 01 | Frontend Development with Jetpack Compose | Jetpack Compose essentials | Full navigation app | 
 | 02 | Processing Large Datasets | Kotlin Flow, LiveData, Paging | Data Processing app |  
 
-This github consists of several branches, containing different apps and their versions. A subset of these are used in the workshop. Others are available for extra references.
+All materials are stored in this github repository, which consists of several branches. Each branch is a version-level of some basic apps that can be developed using the workshop. A subset of the branches are used in the workshop. Others are available for extra references.
 
 This workshop was prepared using various Kotlin and Jetpack-Compose materials from the following sources:
 - Google code labs: https://developer.android.com/codelabs/
