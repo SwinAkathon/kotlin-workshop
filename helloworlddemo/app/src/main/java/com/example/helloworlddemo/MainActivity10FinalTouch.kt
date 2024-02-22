@@ -1,4 +1,4 @@
-package com.example.helloworld
+package com.example.helloworlddemo
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -32,16 +32,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.helloworld.ui.theme.HelloworldTheme
+import com.example.helloworlddemo.ui.theme.HelloworlddemoTheme
 
 /**
  * @overview Theming and coloring. Also see changes in Theme.kt file.
  */
-class MainActivity10Theme : ComponentActivity() {
+class MainActivity10FinalTouch : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContent {
-      HelloworldTheme {
+      HelloworlddemoTheme {
        MyApp7(modifier = Modifier.fillMaxSize(),
          textStyle = MaterialTheme.typography.headlineMedium.copy(
            fontWeight = FontWeight.ExtraBold

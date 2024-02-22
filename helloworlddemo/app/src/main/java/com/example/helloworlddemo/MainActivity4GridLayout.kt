@@ -1,68 +1,61 @@
-package com.example.helloworld
+package com.example.helloworlddemo
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.helloworld.ui.theme.HelloworldTheme
+import com.example.helloworlddemo.ui.theme.HelloworlddemoTheme
 
-/**
- * @overview Maintain state (basic)
- */
-class MainActivity5State : ComponentActivity() {
+class MainActivity4GridLayout : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContent {
-      HelloworldTheme {
-       MyApp3()
+      HelloworlddemoTheme {
+        App2(modifier = Modifier.fillMaxSize())
       }
     }
   }
 }
 
 @Composable
-fun MyApp3(modifier: Modifier = Modifier,
-           names: List<String> = listOf("Android", "Compose")
-           ) {
-  Column(
-    modifier = modifier.padding(vertical = 4.dp)
-  ) {
-    for (name in names) {
-      Greeting4(name)
-    }
+fun App2(modifier: Modifier = Modifier) {
+  // A surface container using the 'background' color from the theme
+  Surface(modifier = Modifier.fillMaxSize(),
+    color = MaterialTheme.colorScheme.background) {
+    Greeting3("Android workshop")
   }
 }
 
 @Composable
-fun Greeting4(name: String, modifier: Modifier = Modifier) {
-  val expanded = remember { mutableStateOf(false) }
-  val extraPadding = if (expanded.value) 48.dp else 0.dp
+fun Greeting3(name: String, modifier: Modifier = Modifier) {
   Surface(
     color = MaterialTheme.colorScheme.primary,
     modifier = modifier.padding(vertical = 4.dp, horizontal = 8.dp)
   ) {
     Row(modifier = Modifier.padding(24.dp)) {
-      Column(modifier = Modifier.weight(1f).padding(bottom = extraPadding)) {
+      Column(modifier = Modifier.weight(1f)) {
         Text(text = "Hello ")
         Text(text = name)
       }
       ElevatedButton(
-        onClick = { expanded.value = !expanded.value }
+        onClick = { /* TODO */ }
       ) {
-        Text( if (expanded.value) "Show less" else "Show more")
+        Text("Show more")
       }
     }
-
   }
 }
+

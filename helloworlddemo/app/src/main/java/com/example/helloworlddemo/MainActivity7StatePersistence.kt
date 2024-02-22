@@ -1,4 +1,4 @@
-package com.example.helloworld
+package com.example.helloworlddemo
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -18,7 +18,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.helloworld.ui.theme.HelloworldTheme
+import com.example.helloworlddemo.ui.theme.HelloworlddemoTheme
 
 /**
  * @overview State persistence
@@ -27,7 +27,7 @@ class MainActivity7StatePersistence : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContent {
-      HelloworldTheme {
+      HelloworlddemoTheme {
        MyApp5(modifier = Modifier.fillMaxSize())
       }
     }
