@@ -2,17 +2,20 @@
 <!-- omit in toc -->
 Application development with Kotlin 
 ==================
-**Github**: https://github.com/SwinAkathon/kotlin-workshop
+
+
+| **Github repository**| |
+|--|--|
+https://github.com/SwinAkathon/kotlin-workshop | ![](images/qrcode_github.png)
 
 <!-- omit in toc -->
 ## Overview
 ⏲️ **Duration :** 3 hours
 
-🎓 **Level** Beginner to Intermediate
+🎓 **Level**: Beginner to Intermediate
+![](images/workshop-splash.jpg)
 
-![](images/splash.png)
-
-The purpose of this workshop is to teach how to develop Android apps in Kotlin that uses the latest features of the language. 
+The purpose of this workshop is to teach how to develop Android apps in Kotlin that uses the **modern features** of the language. 
 
 The original target audience of the workshop are students participating in [Akathon4AIoT](https://fb.me/e/3zDMO0U1l) at Swinburne Vietnam. More generally, however, the workshop would be suitable for anyone who:
 - has a basic knowledge in Kotlin and 
@@ -25,47 +28,26 @@ The workshop includes **two modules**:
 | 01 | Frontend Development with Jetpack Compose | Jetpack Compose essentials | Full navigation app | 
 | 02 | Processing Large Datasets | Kotlin Flow, LiveData, Paging | Data Processing app |  
 
-This github consists of several branches, containing different apps and their versions. A subset of these are used in the workshop. Others are available for extra references.
+All materials are stored in this github repository, which consists of several branches. Each branch is a version-level of some basic apps that can be developed using the workshop. A subset of the branches are used in the workshop. Others are available for extra references.
+
+This workshop was prepared using various Kotlin and Jetpack-Compose materials from the following sources:
+- Google code labs: https://developer.android.com/codelabs/
+- Jetpack Compose developer site: https://developer.android.com/jetpack/compose/.
+  
+You can find referenced links to the above sites attached to the key Kotlin components that are used in the workshop.
 
 <!-- omit in toc -->
 ## 📋 Table of Contents
 - [🎓 Module 01: Building a full navigation app](#-module-01-building-a-full-navigation-app)
-  - [LAB1: Creating your first Jetpack Compose app](#lab1-creating-your-first-jetpack-compose-app)
-    - [✅ Set up your Kotlin programming environment](#-set-up-your-kotlin-programming-environment)
-    - [✅ Create a composable starter app](#-create-a-composable-starter-app)
-    - [✅ Run the app on the emulator](#-run-the-app-on-the-emulator)
-    - [✅ Composable basics](#-composable-basics)
-    - [✅ Tweak the UI](#-tweak-the-ui)
-    - [✅ Reuse composables](#-reuse-composables)
-    - [✅ Layout composables in a grid (row, column)](#-layout-composables-in-a-grid-row-column)
-    - [✅ Maintain state (basic)](#-maintain-state-basic)
-    - [✅ Maintain state with hoisting](#-maintain-state-with-hoisting)
-    - [✅ Persist state](#-persist-state)
-    - [✅ Animate item list](#-animate-item-list)
-    - [✅ Style/Theme the app](#-styletheme-the-app)
-    - [✅ Final touches](#-final-touches)
-    - [References](#references)
+  - [LAB1: Creating your first Jetpack Compose apps](#lab1-creating-your-first-jetpack-compose-apps)
   - [LAB2: Building a full-navigation app](#lab2-building-a-full-navigation-app)
-    - [✅ Design the app structure](#-design-the-app-structure)
-    - [✅ Create the `App` and `AppConfig` classes](#-create-the-app-and-appconfig-classes)
-    - [✅ Create the `Navigation` composables](#-create-the-navigation-composables)
-      - [`Navigation` graph](#navigation-graph)
-      - [`TopNav`: Top navigation](#topnav-top-navigation)
-      - [`DrawerMenu`: drawer menu](#drawermenu-drawer-menu)
-      - [`BottomNav`](#bottomnav)
-    - [✅ Create `modules` whose `screens` are composables](#-create-modules-whose-screens-are-composables)
-      - [Overview](#overview-1)
-      - [Module: Product](#module-product)
-      - [Other modules](#other-modules)
-    - [✅ (Optional) Create `calculator` module](#-optional-create-calculator-module)
 - [🎓 Module 02: Processing Large Data Sets](#-module-02-processing-large-data-sets)
   - [LAB3: Processing large data set with Paging](#lab3-processing-large-data-set-with-paging)
-    - [✅ Maintain `state` with `View Model`](#-maintain-state-with-view-model)
   - [LAB4: Processing real-time data](#lab4-processing-real-time-data)
 <p>
 
 # 🎓 Module 01: Building a full navigation app
-## LAB1: Creating your first Jetpack Compose app
+## LAB1: Creating your first Jetpack Compose apps
 
 ### ✅ Set up your Kotlin programming environment
 We use the standard **`Android studio (AS)`** IDE to develop mobile apps in Kotlin. 
@@ -206,11 +188,17 @@ Ecoms source code structure:
 
 ### ✅ Create the `App` and `AppConfig` classes
 
-`App` composable represents the application. It provides a scaffold for the navigation components and the application component screens.
+`App` composable represents the root application UI component. It provides a scaffold that holds together the navigation components and the application component screens.
 
-The composables that are part of `App` include `ModalNavigationDrawer`, `TopNav`, `BottomNav` and `Navigation`. `ModalNavigationDrawer` 'wraps' a `DrawerMenu` component over the other three components. All four top-level components are defined in the `Navigations.kt`. In particular, `Navigation` defines a navigation graph, every node of which is an application component screen (composable).
+The top-level composables that are referenced by `App` include `ModalNavigationDrawer`, `TopNav`, `BottomNav` and `Navigation`. All four top-level components are defined in the `Navigations.kt`. 
+[`ModalNavigationDrawer`](https://developer.android.com/jetpack/compose/components/drawer) 'wraps' a `DrawerMenu` component over the other three components.
+In particular, `Navigation` defines a navigation graph, every node of which is an application component screen (composable).
 
 **`App.kt`**
+-  `navController`: a shared `NavigationController` object that controls the navigation among composables
+-  `drawState`: captures the drawer menu state, which includes access to `open` and `close` functions (invoked when user clicks on the menu) and other properties
+- `ModalNavigationDrawer`: modal-typed drawer menu, which appears on top of other components. It takes a DrawerMenu composable, which creates a `ModalDrawerSheet` containing the menu items, and a [`Scaffold`](https://developer.android.com/jetpack/compose/components/scaffold) that nicely brings together the other three other top-level composables: `TopNav`, `Navigation` (content screens) and `BottomNav`.
+
 ```
 package com.example.ecoms.ui
 
@@ -223,10 +211,13 @@ import androidx.navigation.compose.rememberNavController
 
 @Composable
 fun App() {
-
+  // controls the navigation among composables
   val navController = rememberNavController()
+
+  // drawer menu state (initialised to 'Closed') and is to be updated between Closed and Opened when user clicks on it
   val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
+  // a modal-typed drawer menu, which appears on top of other components
   ModalNavigationDrawer(
     drawerState = drawerState,
     drawerContent = { DrawerMenu(navController, drawerState) },
@@ -305,7 +296,7 @@ class MainActivity : ComponentActivity() {
 
 `Navigations.kt` contains definitions of the four top-level composables referenced by the `App` composable.
 
-`Navigation` defines a set of target composables that can be navigated to. Each navigation is performed through a route. The current code defines 5 screen composables: `Home`, `Products`, `Search`, `Favourites`, `Profile`.
+[`Navigation`](https://developer.android.com/jetpack/compose/navigation) defines a [`NavHost`](https://developer.android.com/guide/navigation/design#compose), which is a navigation graph consisting in a set of target composables that can be navigated to. Each navigation is performed through a route. The current code defines 5 screen composables: `Home`, `Products`, `Search`, `Favourites`, `Profile`.
 
 #### `Navigation` graph
 ```
@@ -392,6 +383,8 @@ fun toggleDrawerMenu(drawerState: DrawerState, coroutineScope: CoroutineScope) {
 ```
 
 #### `TopNav`: Top navigation
+A [top navigation bar](https://developer.android.com/jetpack/compose/components/app-bars) contains an application name label and an `IconButton` that provides access to the collapsable drawer menu.
+
 ```
 @Composable
 fun TopNav(navController: NavHostController, drawerState: DrawerState) {
@@ -418,6 +411,11 @@ fun TopNav(navController: NavHostController, drawerState: DrawerState) {
 ```
 
 #### `DrawerMenu`: drawer menu
+
+[`Drawer menu`](https://developer.android.com/jetpack/compose/components/drawer) provides a slide-in top-level menu that provides access to key components of an app.
+
+In this example, we set up the drawer menu with items representing the top-level screens (set up in the navigation graph) and using the navigation controller to navigate to them upon user selection.
+Of course, we do not forget, upon navigation, to use function `toggleDrawerMenu()` to close the menu.
 
 ```
 @Composable
@@ -451,6 +449,8 @@ fun DrawerMenu(navController: NavController, drawerState: DrawerState) {
 ```
 
 #### `BottomNav`
+The [bottom navigation](https://developer.android.com/jetpack/compose/navigation#bottom-nav) provides quick access to between 3 to 5 top-level components of the app. 
+
 ```
 @Composable
 fun BottomNav(navController: NavController) {
