@@ -4,9 +4,9 @@ Application development with Kotlin
 ==================
 
 
-| **Github repository**| |
-|--|--|
-|https://github.com/SwinAkathon/kotlin-workshop | |
+| **Github repository**|
+|--|
+|https://github.com/SwinAkathon/kotlin-workshop |
 | ![](images/qrcode_github.png) |
 
 <!-- omit in toc -->
