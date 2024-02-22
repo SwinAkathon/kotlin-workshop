@@ -35,42 +35,15 @@ You can find referenced links to the above sites attached to the key Kotlin comp
 <!-- omit in toc -->
 ## 📋 Table of Contents
 - [🎓 Module 01: Building a full navigation app](#-module-01-building-a-full-navigation-app)
-  - [LAB1: Creating your first Jetpack Compose app](#lab1-creating-your-first-jetpack-compose-app)
-    - [✅ Set up your Kotlin programming environment](#-set-up-your-kotlin-programming-environment)
-    - [✅ Create a composable starter app](#-create-a-composable-starter-app)
-    - [✅ Run the app on the emulator](#-run-the-app-on-the-emulator)
-    - [✅ Composable basics](#-composable-basics)
-    - [✅ Tweak the UI](#-tweak-the-ui)
-    - [✅ Reuse composables](#-reuse-composables)
-    - [✅ Layout composables in a grid (row, column)](#-layout-composables-in-a-grid-row-column)
-    - [✅ Maintain state (basic)](#-maintain-state-basic)
-    - [✅ Maintain state with hoisting](#-maintain-state-with-hoisting)
-    - [✅ Persist state](#-persist-state)
-    - [✅ Animate item list](#-animate-item-list)
-    - [✅ Style/Theme the app](#-styletheme-the-app)
-    - [✅ Final touches](#-final-touches)
-    - [References](#references)
+  - [LAB1: Creating your first Jetpack Compose apps](#lab1-creating-your-first-jetpack-compose-apps)
   - [LAB2: Building a full-navigation app](#lab2-building-a-full-navigation-app)
-    - [✅ Design the app structure](#-design-the-app-structure)
-    - [✅ Create the `App` and `AppConfig` classes](#-create-the-app-and-appconfig-classes)
-    - [✅ Create the `Navigation` composables](#-create-the-navigation-composables)
-      - [`Navigation` graph](#navigation-graph)
-      - [`TopNav`: Top navigation](#topnav-top-navigation)
-      - [`DrawerMenu`: drawer menu](#drawermenu-drawer-menu)
-      - [`BottomNav`](#bottomnav)
-    - [✅ Create `modules` whose `screens` are composables](#-create-modules-whose-screens-are-composables)
-      - [Overview](#overview-1)
-      - [Module: Product](#module-product)
-      - [Other modules](#other-modules)
-    - [✅ (Optional) Create `calculator` module](#-optional-create-calculator-module)
 - [🎓 Module 02: Processing Large Data Sets](#-module-02-processing-large-data-sets)
   - [LAB3: Processing large data set with Paging](#lab3-processing-large-data-set-with-paging)
-    - [✅ Maintain `state` with `View Model`](#-maintain-state-with-view-model)
   - [LAB4: Processing real-time data](#lab4-processing-real-time-data)
 <p>
 
 # 🎓 Module 01: Building a full navigation app
-## LAB1: Creating your first Jetpack Compose app
+## LAB1: Creating your first Jetpack Compose apps
 
 ### ✅ Set up your Kotlin programming environment
 We use the standard **`Android studio (AS)`** IDE to develop mobile apps in Kotlin. 
