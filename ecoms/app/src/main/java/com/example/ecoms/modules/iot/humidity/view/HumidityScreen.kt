@@ -1,4 +1,4 @@
-package com.example.ecoms.modules.product.view
+package com.example.ecoms.modules.iot.humidity.view
 
 import android.content.Context
 import android.widget.Toast
@@ -15,6 +15,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,26 +33,40 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.ecoms.AppConfig
 import com.example.ecoms.common.ui.UIKit
-import com.example.ecoms.modules.product.dao.ProductPagingSource
+import com.example.ecoms.common.ui.UIKit.ErrorItem
+import com.example.ecoms.common.ui.UIKit.LabelledDivider
+import com.example.ecoms.common.ui.UIKit.LoadingItem
+import com.example.ecoms.common.ui.UIKit.LoadingView
+import com.example.ecoms.common.ui.UIKit.SimplePageDivider
+import com.example.ecoms.modules.iot.humidity.dao.HumidityPagingSource
 import com.example.ecoms.ui.theme.EcomsTheme
 
-private lateinit var myViewModel: ProductViewModel
-private val LTAG = "ProductScreen"
+private lateinit var myViewModel: HumidityViewModel
+private val LTAG = "HumidityScreen"
 
 @Composable
-fun ProductScreen(navController: NavController) {
+fun HumidityScreen(navController: NavController) {
   val surfaceHeight = 1f
   val context: Context = navController.context
 
   // initialise ViewModel (once)
+  var viewModelOk by remember { mutableStateOf(true)}
+
   if (!::myViewModel.isInitialized) {
     //myViewModel = viewModel()
     myViewModel = viewModel(
       navController.getViewModelStoreOwner(navController.graph.id))
+    //    Log.d(LTAG, "view model retrieved: ${myViewModel} (${myViewModel.hashCode()})")
 
-//    Log.d(LTAG, "view model retrieved: ${myViewModel} (${myViewModel.hashCode()})")
-
-    myViewModel.setPagingDataSource(ProductPagingSource(context.assets))
+    try {
+      val pageSrc = HumidityPagingSource(context.filesDir.path)
+      pageSrc.listen()
+      myViewModel.setPagingDataSource(pageSrc)
+    } catch (e: Exception) {
+      viewModelOk = false
+      notify(context, "Error: ${e.message}")
+      e.printStackTrace()
+    }
   }
 
   EcomsTheme {
@@ -68,13 +86,13 @@ fun ProductScreen(navController: NavController) {
       ) {
         Column {
           // title
-          Text("Products",
+          Text("Humidity",
             color = Color.Blue,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth(),
             fontSize = TextUnit(32f, TextUnitType.Sp))
           // content
-          ProductItemsScreen(context, myViewModel)
+          if (viewModelOk) HumidityItemsScreen(context, myViewModel)
         }
       }
     }
@@ -82,14 +100,12 @@ fun ProductScreen(navController: NavController) {
 }
 
 @Composable
-fun ProductItemsScreen(context: Context,
-                       viewModel: ProductViewModel,
+fun HumidityItemsScreen(context: Context,
+                       viewModel: HumidityViewModel,
                        maxWidth: Float = 1f,
                        maxHeight: Float = 1f
 ) {
-  // shows the scrollbar on LazyColumn when number of items exceeds the height
-  // not yet supported: val scrollState = rememberScrollState()
-
+  // incrementally loads the item
   val pagingItems = viewModel.getFlow().collectAsLazyPagingItems()
 
   Row(modifier = Modifier.padding(bottom=5.dp)) {
@@ -104,20 +120,19 @@ fun ProductItemsScreen(context: Context,
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
       items(pagingItems.itemCount) { index ->
-        // page divider line
+        // add page divider
         if (index % viewModel.pagingConfig.pageSize == 0) {
-          UIKit.LabelledDivider(
-            label = ((index / viewModel.pagingConfig.pageSize) + 1).toString(), fontSize = 24.sp
-          )
+          LabelledDivider(label = ((index / viewModel.pagingConfig.pageSize)+1).toString()
+            , fontSize = 24.sp)
         }
         // display the item
         pagingItems[index]?.let {
-          ProductItem(product = it, onCheckedChange = { isChecked ->
-            // todo: Handle product selection
+          HumidityItem(humidity = it, onCheckedChange = { isChecked ->
+            // todo: Handle humidity selection
             notify(context, it.toString())
           })
         }
-      } // items
+      } // end items
 
       // handle load state to display progress
       pagingItems.apply {
@@ -125,17 +140,17 @@ fun ProductItemsScreen(context: Context,
           loadState.refresh is LoadState.Loading -> {
             // Display loading at the start (initial page)
             // usually takes longer than normal because initial load size is 3 * pageSize
-            item { UIKit.LoadingView() }
+            item { LoadingView() }
           }
 
           loadState.append is LoadState.Loading -> {
             // Display loading at the end of the list (while wating for more items)
-            item { UIKit.LoadingItem() }
+            item { LoadingItem() }
           }
 
           loadState.refresh is LoadState.Error -> {
             val e = pagingItems.loadState.refresh as LoadState.Error
-            item { UIKit.ErrorItem(e.error) }
+            item { ErrorItem(e.error) }
           }
         }
       } // end: handle load state
@@ -144,5 +159,5 @@ fun ProductItemsScreen(context: Context,
 }
 
 fun notify(context: Context, msg: String) {
-  Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+  Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
 }

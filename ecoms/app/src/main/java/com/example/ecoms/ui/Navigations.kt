@@ -33,6 +33,7 @@ import androidx.navigation.compose.composable
 import com.example.ecoms.AppConfig
 import com.example.ecoms.modules.dashboard.view.DashBoard
 import com.example.ecoms.modules.favourites.view.FavouritesScreen
+import com.example.ecoms.modules.iot.humidity.view.HumidityScreen
 import com.example.ecoms.modules.product.view.ProductScreen
 import com.example.ecoms.modules.profile.view.ProfileScreen
 import com.example.ecoms.modules.search.view.SearchScreen
@@ -48,6 +49,9 @@ fun Navigation(navController: NavHostController, paddingValues: PaddingValues) {
   ) {
     composable("Home") {
       DashBoard(navController)
+    }
+    composable("Humidity") {
+      HumidityScreen(navController)
     }
     composable("Products") {
       ProductScreen(navController)
@@ -99,7 +103,7 @@ fun DrawerMenu(navController: NavController, drawerState: DrawerState) {
     selectedTextColor = Color.Black // Text color when selected
   )
 
-  val items = arrayOf("Products", "Search", "Favourites", "Profile")
+  val items = arrayOf("Products", "Humidity", "Search", "Favourites", "Profile")
 
   ModalDrawerSheet(drawerContainerColor = AppConfig.colorApp) {
     Text(AppConfig.appName, modifier = Modifier.padding(16.dp),

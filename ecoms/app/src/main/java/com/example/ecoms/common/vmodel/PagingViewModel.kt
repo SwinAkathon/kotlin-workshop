@@ -8,7 +8,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.example.ecoms.common.dao.PagingFileSource
+import com.example.ecoms.common.dao.DataSource
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -18,10 +18,21 @@ import kotlinx.coroutines.flow.Flow
  * an input parameter.
  */
 open abstract class PagingViewModel<T: Any>(
-  protected val pageSize: Int = PageSize,
+  open var pagingConfig: PagingConfig = DefaultPagingConfig
 ) : ViewModel() {
   companion object {
-    const val PageSize: Int  = 5
+    val DefaultPagingConfig = PagingConfig(
+      pageSize = 5
+      ,initialLoadSize = 3 * 5      // Number of items to load initially. Defaults to three times pageSize if not set.
+      ,prefetchDistance = 2      // Number of items to prefetch, which helps with smooth scrolling.
+      ,enablePlaceholders = false // Set to true to enable placeholder items.
+    )
+    val DefaultStreamPagingConfig = PagingConfig(
+      pageSize = 2  // smaller page size for stream data
+      ,initialLoadSize = 2    // same as page size (to reduce initial wait time)
+      ,prefetchDistance = 1    // small enough to reduce loading, without disabling prefetch
+      ,enablePlaceholders = false // Set to true to enable placeholder items.
+    )
   }
 
   var countItems: MutableState<Int> = mutableStateOf(0)
@@ -38,7 +49,7 @@ open abstract class PagingViewModel<T: Any>(
   }
 
   // use Paging to obtain objects
-  private lateinit var pagingDataSource: PagingFileSource<T>
+  private lateinit var pagingDataSource: DataSource<T>
 
   private lateinit var flow: Flow<PagingData<T>>
 
@@ -47,11 +58,11 @@ open abstract class PagingViewModel<T: Any>(
    * pagination to retrieve data objects.
    * Further, registers #dataSourceEventHandler to listen to data loading events of #pagingDataSource.
    */
-  fun setPagingDataSource(pagingDataSource: PagingFileSource<T>) {
+  fun setPagingDataSource(pagingDataSource: DataSource<T>) {
     pagingDataSource.registerDataSourceListener(dataSourceEventHandler)
     this.pagingDataSource = pagingDataSource
 
-    flow = Pager(PagingConfig(pageSize = this.pageSize)) { pagingDataSource }
+    flow = Pager(pagingConfig) { pagingDataSource }
       .flow.cachedIn(viewModelScope)
   }
 

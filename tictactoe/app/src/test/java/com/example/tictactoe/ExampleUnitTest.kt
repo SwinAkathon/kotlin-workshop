@@ -1,4 +1,4 @@
-package com.example.ecoms
+package com.example.tictactoe
 
 import org.junit.Test
 
