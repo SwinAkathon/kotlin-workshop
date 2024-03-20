@@ -14,7 +14,6 @@ Application development with Kotlin
 ⏲️ **Duration :** 3 hours
 
 🎓 **Level**: Beginner to Intermediate
-![](images/workshop-splash.jpg)
 
 The purpose of this workshop is to teach how to develop Android apps in Kotlin that uses the **modern features** of the language. 
 
@@ -48,6 +47,9 @@ You can find referenced links to the above sites attached to the key Kotlin comp
 <p>
 
 # 🎓 Module 01: Building a full navigation app
+
+![](images/workshop-splash.jpg)
+
 ## LAB1: Creating your first Jetpack Compose apps
 
 ### ✅ Set up your Kotlin programming environment
@@ -674,8 +676,8 @@ class ProductSource () {
 }
 ```
 
-#### Other modules
->💻 Exercise: Apply your understanding of the Product module to complete the code of the following modules:
+#### 💻 Exercise: other modules
+Apply your understanding of the Product module to complete the code of the following modules:
 - `Customer`
 - `Order`
 - `Dashboard`
@@ -686,12 +688,148 @@ class ProductSource () {
 ### ✅ (Optional) Create `calculator` module
 Extends `ecoms` to include a `calculator` module. The screen design is as shown in the image below.
 
-![](images/calculator.png) 
+> `Calculator` screen:
+> <details>
+>  <summary>Click to view!</summary>
+>  <img src="images/calculator.png" alt="Calculator screen">
+> </details>
 
 # 🎓 Module 02: Processing Large Data Sets
 
+![](images/workshop-splash.jpg)
+
 ## LAB3: Processing large data set with Paging
 
-### ✅ Maintain `state` with `View Model`
+### ✅ Maintaining `state` with `View Model`
+
+### ✅ Paging-aware design pattern
+
+The aim is to incrementally read data from a (potentially large) data source, one page at a time.
+
+#### Class diagram
+![Paging-aware UI pattern](images/paging-pattern-classdiagram.png)
+
+The design pattern relies on 3 built-in classes:
+1. `ViewModel`: to maintain shared data between screens that is safe between configuration changes
+2. `PagingSource`: to act as the data source adapter that supports data paging. We need to specialise `PagingSource` for each type of data source (including structured file, relational database, JSON, XML, etc.)
+3. `Flow`: to stream the data from `PagingSource`, one page at a time and in an asynchronous manner. Asynchrony is supported by coroutine.
+
+Together, these components enable `Screen`s  to read and display data incrementally, giving a smooth scrolling action of the data. The LHS of the class diagram depicts a typical screen structure of an app that uses the design pattern. In this, the data items are presented on an `ItemsView` composable (e.g. a list view, represented by `LazyColumn`). `ItemsView` is in turn composed of the `ItemView` composable, which is responsible for presenting the view of each individual data item. 
+
+#### Communication diagram
+
+![Paging-aware UI pattern](images/paging-pattern-collabdiagram.png)
+
+The above UML [communication diagram](https://www.uml-diagrams.org/communication-diagrams.html) depicts the logic flow of the design pattern. It shows a typical run-time execution scenario, in which objects of the classes collaborate with each other (through method invocations, a.k.a exchanging messages) in an orderly fashion. The numbers attached to each message arrow show the sequence of messages. 
+
+#### Example: `Product` module
+We briefly explain below the design and code of the module `Product` of the `ecoms` app, that implements the paging-aware design pattern. The full source code of this module and the app is provided in the [branch `advanced`](https://github.com/SwinAkathon/kotlin-workshop/tree/advanced/ecoms) of this repository.
+
+Generic classes (reusable for different modules):
+1. `common.vmodel.PagingViewModel`: implements the `PagingViewModel` in the design pattern
+2. `common.dao.PagingFileSource`: implements the `PagingSource` for CSV data source
+3. `common.dao.ObjectFileProc`: implements a generic string-to-object conversion function, which is used by `PagingFileSource` to create objects from each line read from the CSV file.
+
+The `ProductScreen` module of the `ecoms` app consists of the following components:
+1. `view.ProductScreen` composable: implements the `Screen` for products.
+2. `view.ProductItemsScreen` composable: implements the `ItemsView` for products.
+3. `view.ProductItem`: implements the `ItemView` for products.
+4. `view.ProductViewModel`: derived from the generic `PagingViewModel` class for `Product`.
+5. `model.Product`: implements the data class for products.
+6. `dao.ProductPagingSource`: derived from a generic `PagingFileSource` class for `Product`.
+
+> `Product` screen:
+> <details>
+>  <summary>Click to view</summary>
+>  <img src="images/ecoms-product-screen.png" alt="Product screen">
+> </details>
+
+#### Code walk-through
+A brief walk-through of the key code segments, which include the followings:
+
+1. `ProductScreen`: myViewModel initialisation with `ProductPagingSource` (a subtype of `PagingFileSource`)
+2. `ProductItemsScreen`: 
+   1. `pagingItems` (collected through `viewModel.getFlow().collectAsLazyPagingItems()`)
+   2. page-based items view 
+   3. visual loading progress indicator
+3. `ProductViewModel` (a subtype of `PagingViewModel`): sets up the flow with the paging data source. 
+4. `PagingFileSource`: a subtype of `DataSource` (which in turn is a subtype of `PagingSource`)
+   1. function `load()`: page-based loading of items from file
+   2. uses an input lambda (`objectFileProc`) to generically convert each line into an object
 
 ## LAB4: Processing real-time data 
+
+Both real-time and static data sets are treated as data streams which need to be processed by an app. The main feature of real-time or dynamic data is that the data are streamed into the app while it is being run. This is sometimes referred to as [**push-based data model**](https://learning.oreilly.com/library/view/c-reactive-programming/9781788629775/12641805-43d3-4c88-875a-299eef5c2d85.xhtml), where the data sources are in control of providing (or pushing) the data. This is different from the conventional pull-based data model found in typical business applications, where the application controls what and when the data are pulled in for processing. 
+
+Push-based data processing model is common among IoT applications, where the IoT nodes (including sensors and devices) become the data sources, pushing the data in real-time to the apps that are interested in processing them. The data are multicasted to the apps through channels, called **topics**. The apps subscribe to the topics of interest and receive the data when they become available.
+
+In this lab, we will learn to develop a real-time data application, following the push-based model, that processes data that are received through a popular IoT-based messaging protocol, named [MQTT (Message Queuing Telemetry Transport)](https://mqtt.org/). 
+
+### Real-time App Design model 
+The following diagram extends and specialises the design pattern model presented earlier in LAB3 to construct a design model for a push-based real-time app. The net result is a **push- and page-based design model** that supports loading real-time data one page at a time. 
+
+![Push-based App](images/paging-realtime-pattern.png)
+
+### Example: `Humidity` module
+The following screenshots demonstrate the humidity module of the `ecoms`, which receives the real-time humidity data from the MQTT service and incrementally displays them on a `LazyColumn`.
+
+> **Initial push- and page-based loading screen with `LazyColumn`**
+> <details>
+>  <summary>Click to view</summary>
+>  <img src="images/ecoms-humidity-initial-loading-screen.png" alt="Sensor initial screen">
+> </details>
+
+> **Subsequent page-based loading screen**
+> <details>
+>  <summary>Click to view</summary>
+>  <img src="images/ecoms-humidity-loading-screen.png" alt="Sensor loading screen">
+> </details>
+> 
+
+### (Optional) Message broker service for MQTT
+In the lab, the MQTT service and a reference IoT node are already set up for you so you only need to connect the app to the service to receive data.
+
+If you want to set up an MQTT service for your own application then follow the instructions given on this [Github repository](https://github.com/vandaipham/MQTT_TEST) to:
+1. install an MQTT service on a docker container
+2. runs a Python-based IoT node that periodically pushes temperature, humidity, and light data to subcribers (clients) on the MQTT network (via the MQTT service)
+
+Thanks **Dr. Dai Van Pham** for the Github repository!
+
+### Implementation
+Refer to the `advanced` branch of this repository for the source code of `ecoms` app that implement the real-time app design model with the `Humidity` module. This module processes data received from the MQTT service through the channel named `ihome/feeds/humidity`.
+
+In fact, the MQTT service pushes data to three channels, one for each type of sensor reading: 
+1. humidity: `ihome/feeds/humidity`
+2. temperature: `ihome/feeds/temperature`
+3. light: `ihome/feeds/light`
+
+The implementation is modular so that you can adapt it for your own module. 
+
+#### Code walk-through
+A brief walk-through of the key code segments, which include the followings:
+
+1. `HumidityScreen`: similar to `ProductScreen` but uses `HumidityPagingSource` instead of `PagingFileSource`
+2. `HumidityPagingSource`: a subtype of `PagingMqttSource` to read MQTT data from the humidity channels
+3. `PagingMqttSource`: a generic base class for reading Mqtt data from a set of input feeds (channels). 
+   1. uses `KMqttClient` to connect to MQTT service and save data of each channel to a local CSV file (named after the channel)
+   2. uses `PagingDynamicFileSource` to page-based read data from the CSV file
+4. `PagingDynamicFileSource`: a sub-type of `PagingFileSource` that continuously read data from a file one page at a time. It does not stop and continuously wait for new data in the file. 
+5. `KMqttClient`: a wrapper class form `MqttClient` provided by the Paho library.
+
+### 💻 Exercise: 
+#### Other modules
+1. Adapt the `Humidity` module to implement two modules for presenting the data received from the temperature and light channels. 
+2. Apply the **master-detail design pattern** to create a detail view screen (composable) for each module. When the user clicks on an item, shows the detailed screen listing the item. Training resources:
+   - [List detail layout](https://developer.android.com/jetpack/compose/layouts/list-detail)
+
+#### Paging relational data source
+Adapt the `PagingMqttSource` class to implement a `PagingMqttRelationalSource` that also reads streaming data from the MQTT service but uses a relational database to store the received data (instead of using a CSV file):
+1. Create `PagingMqttRelationalSource` in the `...common.dao` package
+2. Create a class named `PagingRelationalDataSource`, that is used by function `PagingMqttRelationalSource.saveData()` to store the received data of each channel to a database table (e.g. humidity data is stored in the `humidity` table). Create the table if it does not exist:
+   1. uses the Jetpack's **Room API** to store the local data into SQLlite datatabase. Training materials:
+      - [Save data in a local database](https://developer.android.com/training/data-storage/room)
+      - [**Collabs** workshop on Room](https://developer.android.com/codelabs/basic-android-kotlin-compose-persisting-data-room)
+
+   2. a better alternative is to use an external database (e.g. MySQL) to store the data. For testing, you can run this database on the same host machine running the app.
+
+
