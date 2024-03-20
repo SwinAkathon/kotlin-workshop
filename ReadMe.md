@@ -688,10 +688,3 @@ Extends `ecoms` to include a `calculator` module. The screen design is as shown 
 
 ![](images/calculator.png) 
 
-# 🎓 Module 02: Processing Large Data Sets
-
-## LAB3: Processing large data set with Paging
-
-### ✅ Maintain `state` with `View Model`
-
-## LAB4: Processing real-time data 
