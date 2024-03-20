@@ -44,7 +44,6 @@ You can find referenced links to the above sites attached to the key Kotlin comp
 - [🎓 Module 02: Processing Large Data Sets](#-module-02-processing-large-data-sets)
   - [LAB3: Processing large data set with Paging](#lab3-processing-large-data-set-with-paging)
   - [LAB4: Processing real-time data](#lab4-processing-real-time-data)
-  - [LAB5: Data Graphing](#lab5-data-graphing)
 <p>
 
 # 🎓 Module 01: Building a full navigation app
@@ -817,8 +816,20 @@ A brief walk-through of the key code segments, which include the followings:
 4. `PagingDynamicFileSource`: a sub-type of `PagingFileSource` that continuously read data from a file one page at a time. It does not stop and continuously wait for new data in the file. 
 5. `KMqttClient`: a wrapper class form `MqttClient` provided by the Paho library.
 
-### 💻 Exercise: other modules
-Adapt the `Humidity` module to implement two modules for presenting the data received from the temperature and light channels. 
+### 💻 Exercise: 
+#### Other modules
+1. Adapt the `Humidity` module to implement two modules for presenting the data received from the temperature and light channels. 
+2. Apply the **master-detail design pattern** to create a detail view screen (composable) for each module. When the user clicks on an item, shows the detailed screen listing the item. Training resources:
+   - [List detail layout](https://developer.android.com/jetpack/compose/layouts/list-detail)
 
-## LAB5: Data Graphing
-To be explored.
+#### Paging relational data source
+Adapt the `PagingMqttSource` class to implement a `PagingMqttRelationalSource` that also reads streaming data from the MQTT service but uses a relational database to store the received data (instead of using a CSV file):
+1. Create `PagingMqttRelationalSource` in the `...common.dao` package
+2. Create a class named `PagingRelationalDataSource`, that is used by function `PagingMqttRelationalSource.saveData()` to store the received data of each channel to a database table (e.g. humidity data is stored in the `humidity` table). Create the table if it does not exist:
+   1. uses the Jetpack's **Room API** to store the local data into SQLlite datatabase. Training materials:
+      - [Save data in a local database](https://developer.android.com/training/data-storage/room)
+      - [**Collabs** workshop on Room](https://developer.android.com/codelabs/basic-android-kotlin-compose-persisting-data-room)
+
+   2. a better alternative is to use an external database (e.g. MySQL) to store the data. For testing, you can run this database on the same host machine running the app.
+
+

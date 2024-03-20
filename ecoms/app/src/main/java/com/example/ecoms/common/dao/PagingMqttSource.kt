@@ -62,7 +62,7 @@ open class PagingMqttSource<T: Any> (
         log("Message received: $message on topic: $topic")
         topic?.let {
           message?.let {
-            saveDataToFile(topic, message.toString())
+            saveData(topic, message.toString())
           }
         }
       }
@@ -109,7 +109,7 @@ open class PagingMqttSource<T: Any> (
    *  topic: dash-separated string, the last element of which is the domain attribute
    *    (e.g. topic = `ihome/feeds/temperature` => attribute = `temperature`)
    */
-  private fun saveDataToFile(topic: String, message: String) {
+  private fun saveData(topic: String, message: String) {
     // store message into CSV file specified by storagePath
     // file name = topic after replacing all separator chars by "_"
     // places the message data into the CSV file named after the attribute (e.g. temperature.csv)
