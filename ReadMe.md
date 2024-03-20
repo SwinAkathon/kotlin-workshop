@@ -699,7 +699,7 @@ Extends `ecoms` to include a `calculator` module. The screen design is as shown 
 
 # 🎓 Module 02: Processing Large Data Sets
 
-![](images/workshop-splash.jpg)
+![](images/workshop2-splash.jpg)
 
 ## LAB3: Processing large data set with Paging
 
