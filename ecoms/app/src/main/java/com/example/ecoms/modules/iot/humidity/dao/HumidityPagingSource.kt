@@ -7,7 +7,7 @@ import com.example.ecoms.modules.iot.humidity.model.Humidity
 
 class HumidityPagingSource (private val storagePath: String) :
   PagingMqttSource<Humidity>(
-  "ws://192.168.1.8:9001",
+  "ws://10.1.9.70:9001",
   "student",
   "student",
   storagePath,
