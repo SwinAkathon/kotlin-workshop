@@ -11,7 +11,7 @@ Application development with Kotlin
 
 <!-- omit in toc -->
 ## Overview
-⏲️ **Duration :** 3 hours
+⏲️ **Duration :** 4 hours ( 2 hours / module)
 
 🎓 **Level**: Beginner to Intermediate
 
@@ -179,7 +179,7 @@ Use expandable icon to replace the button.
 
 ## LAB2: Building a full-navigation app
 
-The app that we build in this lab is called `ecoms` as it has the structure of an ecommerce app. 
+The app that we build in this lab is called `ecoms` as it has the structure of an ecommerce app.
 
 ### ✅ Design the app structure
 The aim is to design an app that has the essential navigation components, which include top, bottom and  drawer menu navigation. The content panel displays different a screen composable based on the user's selection on a navigation item or the user's interaction on a current screen.
@@ -676,9 +676,6 @@ class ProductSource () {
 }
 ```
 
-#### Solution code
-Branch `basic` of this repository has the solution code for the components discussed so far. 
-
 #### 💻 Exercise: other modules
 Apply your understanding of the Product module to complete the code of the following modules:
 - `Customer`
@@ -699,7 +696,7 @@ Extends `ecoms` to include a `calculator` module. The screen design is as shown 
 
 # 🎓 Module 02: Processing Large Data Sets
 
-![](images/workshop2-splash.jpg)
+![](images/workshop-splash.jpg)
 
 ## LAB3: Processing large data set with Paging
 
