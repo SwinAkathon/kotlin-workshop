@@ -11,7 +11,7 @@ Application development with Kotlin
 
 <!-- omit in toc -->
 ## Overview
-⏲️ **Duration :** 3 hours
+⏲️ **Duration :** 4 hours ( 2 hours / module)
 
 🎓 **Level**: Beginner to Intermediate
 
