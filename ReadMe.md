@@ -795,6 +795,13 @@ If you want to set up an MQTT service for your own application then follow the i
 
 Thanks **Dr. Dai Van Pham** for the Github repository!
 
+Once the MQTT service has been set up, it and the IoT node can be run as follows:
+```
+# docker start mqtt5broker
+
+MQTT_TEST# python IoTNode.py
+```
+
 ### Implementation
 Refer to the `advanced` branch of this repository for the source code of `ecoms` app that implement the real-time app design model with the `Humidity` module. This module processes data received from the MQTT service through the channel named `ihome/feeds/humidity`.
 
