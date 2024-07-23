@@ -7,7 +7,9 @@ import com.example.ecoms.modules.iot.humidity.model.Humidity
 
 class HumidityPagingSource (private val storagePath: String) :
   PagingMqttSource<Humidity>(
-  "ws://10.1.9.70:9001",
+    // IMPORTANT: need to use the actual interface IP address when testing inside the emulator
+    // (localhost: does not work with emulator)
+  "ws://10.1.4.34:9001",
   "student",
   "student",
   storagePath,
